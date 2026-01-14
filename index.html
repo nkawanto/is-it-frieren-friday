@@ -57,8 +57,13 @@
                 const result = await contract.check();
 
                 // 4. Update the page
-                document.getElementById("answer").innerText = result;
-                // document.querySelector(".status").innerText = "Live from Base Mainnet";
+                if (result == "yes") {
+                    document.getElementById("answer").innerText = "no";
+                    document.querySelector(".status").innerText = "it's not";
+                } else {
+                    document.getElementById("answer").innerText = "yes";
+                    document.querySelector(".status").innerText = "it is";
+                }
 
             } catch (error) {
                 console.error("Blockchain Error:", error);
