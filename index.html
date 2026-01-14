@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Is It Frieren Friday?</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        #answer {
+            font-size: 8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .status {
+            margin-top: 20px;
+            font-size: 1rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="answer">Loading...</div>
+    <div class="status">Checking Base Blockchain...</div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
+
+    <script>
+        // Your deployed contract address
+        const CONTRACT_ADDRESS = "0x6059D941e73501C1154afE4D6456eDEE601e5794";
+        const RPC_URL = "https://mainnet.base.org"; // Public Base Node
+
+        // The "Instruction Manual" for the contract
+        const ABI = [
+            "function check() public view returns (string)"
+        ];
+
+        async function checkFriday() {
+            try {
+                // 1. Connect to the Base network (Read-only)
+                const provider = new ethers.JsonRpcProvider(RPC_URL);
+                
+                // 2. Locate your contract
+                const contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, provider);
+
+                // 3. Ask the question
+                const result = await contract.check();
+
+                // 4. Update the page
+                document.getElementById("answer").innerText = result;
+                document.querySelector(".status").innerText = "Live from Base Mainnet";
+
+            } catch (error) {
+                console.error("Blockchain Error:", error);
+                document.getElementById("answer").innerText = "Error";
+                document.querySelector(".status").innerText = "Could not reach Base network";
+            }
+        }
+
+        // Run immediately when page loads
+        checkFriday();
+    </script>
+</body>
+</html>
